@@ -2,14 +2,18 @@ import torch
 import torch.nn as nn
 import torchvision
 
+# d) With the following model consisting of two conv2d layers with relu activations,
+# and pooling layers between, as well as a second linear layer before the final classification,
+# we achieve a max accuracy of 91.640% within 19 epochs
+
 train_data = torchvision.datasets.FashionMNIST('./data', train=True, download=True)
 x_train = train_data.data.reshape(-1, 1, 28, 28).float()
-y_train = torch.zeros((x_train.targets.shape[0], 10))
+y_train = torch.zeros((train_data.targets.shape[0], 10))
 y_train[torch.arange(train_data.targets.shape[0]), train_data.targets] = 1
 
 test_data = torchvision.datasets.FashionMNIST('./data', train=False, download=True)
 x_test = test_data.data.reshape(-1, 1, 28, 28).float()
-y_test = torch.zeros((x_test.targets.shape[0], 10))
+y_test = torch.zeros((test_data.targets.shape[0], 10))
 y_test[torch.arange(test_data.targets.shape[0]), test_data.targets] = 1
 
 mean = x_train.mean()
@@ -28,12 +32,14 @@ class ConvolutionalModel(nn.Module):
 
         self.logits = nn.Sequential(
             nn.Conv2d(1, 32, kernel_size=5, padding=2),
+            nn.ReLU(),
             nn.MaxPool2d(kernel_size=2),
             nn.Conv2d(32, 64, kernel_size=5, padding=2),
+            nn.ReLU(),
             nn.MaxPool2d(kernel_size=2),
             nn.Flatten(),
-            nn.Linear(64*7*7, 1024),
-            nn.Linear(1024, 10)
+            nn.Linear(64*7*7, 100),
+            nn.Linear(100, 10)
         )
 
     def f(self, x):

@@ -5,13 +5,13 @@ import torchvision
 # nn_sequential reaches an accuracy of 97.99% after 20 epochs, but its top accuracy is 98.04%, reached after 17 epochs.
 
 # a) After adding another Conv2d layer (64@14x14) and a Max-Pool (64@7x7),
-# we reach a max accuracy of 98.630% (12 epochs)
+# we reach a max accuracy of 98.630% (13 epochs)
 
 # b) After adding a linear layer that goes to 1x1024 before going to 1x10,
-# we achieve an accuracy of 98.310% after 5 epochs.
+# we achieve an accuracy of 98.310% after 6 epochs.
 
-# c) After adding several ReLU and Dropout layers (current model), we achieved a total of __% after
-# a __ epochs.
+# c) After adding several ReLU layers (current model), we achieved a total of 99.110% after
+# 17 epochs.
 
 # Load observations from the mnist dataset. The observations are divided into a training set and a test set
 mnist_train = torchvision.datasets.MNIST('./data', train=True, download=True)
@@ -43,16 +43,13 @@ class ConvolutionalNeuralNetworkModel(nn.Module):
         # Model layers (includes initialized model variables):
         self.logits = nn.Sequential(
             nn.Conv2d(1, 32, kernel_size=5, padding=2),
-            nn.Dropout(0.7),
-            nn.MaxPool2d(kernel_size=2),
             nn.ReLU(),
+            nn.MaxPool2d(kernel_size=2),
             nn.Conv2d(32, 64, kernel_size=5, padding=2),
-            nn.Dropout(0.7),
             nn.MaxPool2d(kernel_size=2),
             nn.ReLU(),
             nn.Flatten(),
             nn.Linear(64 * 7 * 7, 1024),
-            nn.ReLU(),
             nn.Linear(1024, 10))
 
     # Predictor
